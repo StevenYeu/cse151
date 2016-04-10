@@ -28,7 +28,7 @@ class abalone:
                 self.Nr -= 1
 
             self.Nr = self.sampleSize
-            self.Nn = round(self.sampleSize* 0.1)
+            self.Nn = round(self.sampleSize*0.1)
 
         mean = numpy.mean(list(self.sampleCounter.values()))/float(iters)
         std = numpy.std(list(self.sampleCounter.values()))/float(iters)
@@ -36,7 +36,6 @@ class abalone:
         return mean, std
 
 if __name__ == '__main__':
-
     for i in range(1,6):
         sample = abalone()
         print(sample.sampler(10 ** i))
