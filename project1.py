@@ -7,15 +7,22 @@ class abalone:
         self.sampleCounter = {}
         with open('abalone.data') as f:
             self.sampleSize = sum(1 for _ in f)
-        for i in range(self.sampleSize):
-            self.sampleCounter[i] = 0
-        self.Nn = round(self.sampleSize*0.1)
+        self.Nn = 0
+        self.Nr = 0
         numpy.random.seed(1)
         self.genRandom = 0
+
+    def setCounter(self):
+        for i in range(self.sampleSize):
+            self.sampleCounter[i] = 0
+
+    def setPickNext(self):
         self.Nr = self.sampleSize
+        self.Nn = round(self.sampleSize*0.1)
 
     def sampler(self, iters):
         for _ in range(iters):
+            self.setPickNext()
             for i in range(self.sampleSize):
                 self.genRandom = numpy.random.rand()
 
@@ -27,8 +34,8 @@ class abalone:
                     self.sampleCounter[i] += 1
                 self.Nr -= 1
 
-            self.Nr = self.sampleSize
-            self.Nn = round(self.sampleSize*0.1)
+            #self.Nr = self.sampleSize
+            #self.Nn = round(self.sampleSize*0.1)
 
         mean = numpy.mean(list(self.sampleCounter.values()))/float(iters)
         std = numpy.std(list(self.sampleCounter.values()))/float(iters)
@@ -36,9 +43,11 @@ class abalone:
         return mean, std
 
 if __name__ == '__main__':
+    sample = abalone()
     for i in range(1,6):
-        sample = abalone()
+        sample.setCounter()
         print(sample.sampler(10 ** i))
+
 
 
 
