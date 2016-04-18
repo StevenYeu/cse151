@@ -2,7 +2,9 @@ import numpy, math, csv, heapq
 import scipy.spatial.distance as eu
 import numpy.matlib as mat
 from statistics import *
+import sys
 #Shiyao Liu, A10626758
+#Steven Yeu, A10720198
 
 class sample:
     def __init__(self, filename):
@@ -49,6 +51,8 @@ class sample:
 
     def load(self):
         if self.filename == 'abalone.data':
+
+            # create proxy variables for gender
             gender = []
             with open(self.filename, 'r') as f:
                 for line in f:
@@ -67,13 +71,19 @@ class sample:
     def split(self):
 
         # split into test and training
+
+        # create index to test and train data
         training_index = [k for k,v in self.sampleCounter.items() if v == 0]
         test_index = [k for k,v in self.sampleCounter.items() if v == 1]
+
+        # create training data
         self.training_set = [self.matrix[i] for i in training_index]
         _, training_size = numpy.shape(self.training_set)
         self.training_set = numpy.array(self.training_set)
         self.training_label = self.training_set[:, training_size-1]
         self.training_set = self.training_set[:, 0:training_size-1]
+
+        # create test data
         self.test_set = [self.matrix[i] for i in test_index]
         _, test_size = numpy.shape(self.test_set)
         self.test_set = numpy.array(self.test_set)
@@ -109,6 +119,7 @@ class sample:
             k_smallest = [item[1] for item in heapq.nsmallest(k, temp)]
             try:
                 majority_label = mode(k_smallest)
+            # Error check in case  there is no mode
             except StatisticsError:
                 majority_label = max(set(k_smallest), key=k_smallest.count)
 
@@ -126,13 +137,16 @@ def confusionMatrix(actual,pred):
     for (a,b) in z:
         con[int(a)][int(b)] += 1
 
-    output = open('output.txt', "w")
-    for item in con:
-        output.write("%s\n" % item)
+    # write confusion matrix to file
+    numpy.savetxt("matrix.csv",con,delimiter=',')
+
+    #output = open('output.txt', "w")
+    #for item in con:
+    #    output.write("%s\n" % item)
     return con
 
 if __name__ == '__main__':
-    sample = sample('abalone.data')
+    sample = sample(sys.argv[1])
     sample.setCounter()
     sample.sampler(1)
     sample.load()
@@ -142,10 +156,11 @@ if __name__ == '__main__':
     res_dict = {}
     for i in range(1, 10, 2):
         rate, prediction, result = sample.kNN(i)
-        res_dict[rate] = (prediction, result)
-    print(9, rate)
+        res_dict[rate] = (prediction, result,i)
+    #print(i, rate)
 
-    prediction, result = res_dict[min(res_dict)]
+    prediction, result,k = res_dict[min(res_dict)]
+    print(min(res_dict),k)
     print(confusionMatrix(result, prediction))
 
 
