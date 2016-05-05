@@ -34,3 +34,28 @@ def kNN(k, training_set, test_set,training_label, test_label):
         prediction.append(majority_label)
     error_rate = error/float(len(test_set))*100.0
     return error_rate, prediction, test_label
+
+
+def backsolve(Y, U):
+    n, h = Y.shape
+    print(n, h)
+    X = numpy.zeros((h,n))
+    for j in range(0, h):
+        X[n-1][j] = Y[n-1][j]/(U[n-1][n-1]*1.0)
+        for i in range(n-1, -1, -1):
+            sum = 0
+            for k in range(i, n):
+                sum = sum + U[i][k] * U[k][j]
+            X[i][j] = (Y[i][j] -sum)/(U[i][i]*1.0)
+    return X
+
+def QR(M):
+
+
+
+if __name__ == '__main__':
+    A = [[1, 2, 1], [0, -4, 1], [0, 0, -2]]
+    A = numpy.array(A)
+    B = [[1, 1, 1],[1, 1, 1],[1, 1, 1]]
+    B = numpy.array(B)
+    print(backsolve(B, A))
