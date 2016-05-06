@@ -1,6 +1,7 @@
 import numpy, heapq
 import scipy.spatial.distance as eu
 from statistics import *
+import functools as fun
 
 
 def confusionMatrix(actual,pred):
@@ -36,7 +37,7 @@ def kNN(k, training_set, test_set,training_label, test_label):
     return error_rate, prediction, test_label
 
 
-def backsolve(Y, U):
+def back_solve(Y, U):
     n, h = Y.shape
     print(n, h)
     X = numpy.zeros((h,n))
@@ -49,13 +50,40 @@ def backsolve(Y, U):
             X[i][j] = (Y[i][j] -sum)/(U[i][i]*1.0)
     return X
 
-def QR(M):
+def qr_decompose(X):
+    n, d = numpy.shape(X)
+    Qlist = []
+    R = X
+    for i in range(d):
+        # 1. obtains the target column zi
+        z = R[i:, i:i+1]
+        # 2. find vi
+        e = numpy.zeros((n-i, 1))
+        e[0][0] = 1
+        print(numpy.linalg.norm(z))
+        if z[0][0] > 0:
+            v = -numpy.linalg.norm(z)*e - z
+        else:
+            v = numpy.linalg.norm(z)*e - z
+        # 3. find Householder matrix Pi
+        P = numpy.identity(n-i) - numpy.dot(2*v, v.T)/numpy.dot(v.T,v)
+        # 4. Q
+        Q = numpy.identity(n)
+        Q[i:,i:] = P
+        Qlist.append(Q)
+        # 5. Update R
+        R = numpy.dot(Q,R)
+
+    Qacc = fun.reduce(lambda x, y: numpy.dot(x,y), Qlist[::-1])
+    return Qacc.T, R
+
+
+
+
 
 
 
 if __name__ == '__main__':
-    A = [[1, 2, 1], [0, -4, 1], [0, 0, -2]]
+    A = [[1, -1, -1], [1, 2, 3], [2, 1, 1], [2, -2, 1], [3, 2, 1]]
     A = numpy.array(A)
-    B = [[1, 1, 1],[1, 1, 1],[1, 1, 1]]
-    B = numpy.array(B)
-    print(backsolve(B, A))
+    print(qr_decompose(A))
