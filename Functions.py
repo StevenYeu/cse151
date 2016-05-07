@@ -60,7 +60,6 @@ def qr_decompose(X):
         # 2. find vi
         e = numpy.zeros((n-i, 1))
         e[0][0] = 1
-        print(numpy.linalg.norm(z))
         if z[0][0] > 0:
             v = -numpy.linalg.norm(z)*e - z
         else:
@@ -77,13 +76,9 @@ def qr_decompose(X):
     Qacc = fun.reduce(lambda x, y: numpy.dot(x,y), Qlist[::-1])
     return Qacc.T, R
 
-
-
-
-
-
-
 if __name__ == '__main__':
     A = [[1, -1, -1], [1, 2, 3], [2, 1, 1], [2, -2, 1], [3, 2, 1]]
     A = numpy.array(A)
-    print(qr_decompose(A))
+    Q, R = qr_decompose(A)
+    print(Q)
+    print(R)
