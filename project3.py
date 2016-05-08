@@ -18,7 +18,14 @@ if __name__ == '__main__':
     X_test = data[train_num:, :-1]
     Y_test = data[train_num:, -1]
 
+    print("Xtrain", X_train.shape)
+    print("Xtest", X_test.shape)
+
+    print("Ytrain", Y_train.shape)
+    print("Ytest", Y_test.shape)
+
     Q, R = Functions.qr_decompose(X_train)
+    print("Done With QR")
     beta = Functions.back_solve(R, np.dot(Q.T, Y_train))
 
     print(np.sqrt(np.mean((np.dot(X_test, beta) - Y_test) ** 2)))
