@@ -52,7 +52,6 @@ def qr_decompose(X):
     n, d = numpy.shape(X)
     Qlist = []
     R = X
-    #Qacc =numpy.identity(n)
     for i in range(d):
         # 1. obtains the target column zi
         z = R[i:, i:i+1]
@@ -69,7 +68,6 @@ def qr_decompose(X):
         Q = numpy.identity(n)
         Q[i:,i:] = P
         Qlist.append(Q)
-        #Qacc = numpy.dot(Q,Qacc)
         # 5. Update R
         R = numpy.dot(Q,R)
     Qacc = fun.reduce(lambda x, y: numpy.dot(x,y), Qlist[::-1])
