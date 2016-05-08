@@ -5,7 +5,7 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    with open(sys.argv[1], 'rb') as csvfile:
+    with open(sys.argv[1], 'r') as csvfile:
         reader = csv.reader(csvfile, delimiter=',')
         data = np.array([[float(r) for r in row] for row in reader])
 
