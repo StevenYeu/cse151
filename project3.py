@@ -5,9 +5,26 @@ import numpy as np
 
 
 if __name__ == '__main__':
-    with open(sys.argv[1], 'r') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        data = np.array([[float(r) for r in row] for row in reader])
+    file = sys.argv[1]
+    if file == 'abalone.data':
+        # create proxy variables for gender
+        gender = []
+        with open(file, 'r') as f:
+            for line in f:
+                gender.append(line[0])
+            male = [1 if i == 'M' else 0 for i in gender]
+            female = [1 if i == 'F' else 0 for i in gender]
+            infant = [1 if i =='I' else 0 for i in gender]
+            data = np.array(list( np.loadtxt(file, delimiter=",",usecols=(1,2,3,4,5,6,7,8))))
+            data = np.insert(data,0,male,axis=1)
+            data = np.insert(data,0,female,axis=1)
+            data = np.insert(data,0,infant,axis=1)
+    else:
+        with open(file, 'r') as csvfile:
+            reader = csv.reader(csvfile, delimiter=',')
+            data = np.array([[float(r) for r in row] for row in reader])
+
+
 
     # create random sample train (80%) and test set (20%)
     np.random.seed(0)
