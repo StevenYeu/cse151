@@ -39,7 +39,7 @@ def kNN(k, training_set, test_set,training_label, test_label):
 
 def back_solve(A, b):
     m, n = A.shape
-    x = numpy.array(b.T)
+    x = b
     newN = n -1
     for i in range(n):
         if i > 0:
@@ -54,7 +54,6 @@ def qr_decompose(X):
     R = X
     #Qacc =numpy.identity(n)
     for i in range(d):
-        print(i)
         # 1. obtains the target column zi
         z = R[i:, i:i+1]
         # 2. find vi
