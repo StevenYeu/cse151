@@ -37,18 +37,16 @@ def kNN(k, training_set, test_set,training_label, test_label):
     return error_rate, prediction, test_label
 
 
-def back_solve(Y, U):
-    n, h = Y.shape
-    print(n, h)
-    X = numpy.zeros((h,n))
-    for j in range(0, h):
-        X[n-1][j] = Y[n-1][j]/(U[n-1][n-1]*1.0)
-        for i in range(n-1, -1, -1):
-            sum = 0
-            for k in range(i, n):
-                sum = sum + U[i][k] * U[k][j]
-            X[i][j] = (Y[i][j] -sum)/(U[i][i]*1.0)
-    return X
+def back_solve(A, b):
+    m, n = A.shape
+    x = numpy.array(b.T)
+    newN = n -1
+    for i in range(n):
+        if i > 0:
+            for j in range(0, i):
+                x[newN - i] = x[newN - i] - x[newN - j] * A[newN - i][newN - j]
+        x[newN - i] = x[newN - i] / (1.0 * A[newN - i][newN - i])
+    return numpy.array([x]).T
 
 def qr_decompose(X):
     n, d = numpy.shape(X)
@@ -82,3 +80,7 @@ if __name__ == '__main__':
     Q, R = qr_decompose(A)
     print(Q)
     print(R)
+
+    G = numpy.array([[1,-2,1],[0,1,6],[0,0,1]])
+    b = numpy.array([4,-1,2])
+    print(back_solve(G,b))
