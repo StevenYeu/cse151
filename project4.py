@@ -84,11 +84,11 @@ def update_centers(cluster_list):
     return new_list
 
 
-def getCluster(cluster_list, center_list, point,labels):
+def getCluster(cluster_list, center_list, point):
     dist = [eu.euclidean(i,point) for i in center_list]
     closest = min(dist)
     index = dist.index(closest)
-    return cluster_list[index],labels[index]
+    return cluster_list[index]
 
 
 
@@ -139,7 +139,7 @@ if __name__ == '__main__':
 
     RMSE = 0
     for x, y in zip(X_test, Y_test):
-        model, _ = getCluster(clusters, center, x, labels)
+        model = getCluster(clusters, center, x)
         for a, b in beta_list:
             if a == model:
                 beta = b
