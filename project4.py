@@ -81,7 +81,7 @@ def update_centers(cluster_list):
         centroid = np.array(i).mean(0)
         new_list[j] = (centroid)
         j = j+1
-    return  new_list
+    return new_list
 
 
 def getCluster(cluster_list, center_list, point,labels):
@@ -113,7 +113,6 @@ if __name__ == '__main__':
     X_test = data[train_num:, :-1]
     Y_test = data[train_num:, -1]
 
-    #X_train = zscale(X_train)
     # X_means = np.mean(X_train, axis=0)
     # X_stds = np.std(X_train, axis=0)
     # X_train = (X_train - X_means) / X_stds
@@ -123,7 +122,7 @@ if __name__ == '__main__':
     X_test = append_ones(X_test)
 
 
-    clusters, center, WCSS, mean, std, lables = cluster(int(sys.argv[2]), X_train, Y_train)
+    clusters, center, WCSS, mean, std, labels = cluster(int(sys.argv[2]), X_train, Y_train)
     # print("Center")
     # print(center)
     # print("WCSS")
@@ -133,14 +132,19 @@ if __name__ == '__main__':
     # print("STD")
     # print(std)
 
-    RSME = 0
-    for c,l in zip(clusters,lables):
-        #model,lab = getCluster(clusters, center, i, lables)
-        #model = np.array(model)
-        beta, _, _, _ = np.linalg.lstsq(c,l)
-        print(mean_squared_error(np.dot(X_test,beta),Y_test))
-        print(np.sqrt(np.mean((np.dot(X_test, beta) - Y_test) ** 2)))
+    beta_list = []
+    for c, l in zip(clusters,labels):
+        beta, _, _, _ = np.linalg.lstsq(c, l)
+        beta_list.append((c,beta))
+
+    RMSE = 0
+    for x, y in zip(X_test, Y_test):
+        model, _ = getCluster(clusters, center, x, labels)
+        for a, b in beta_list:
+            if a == model:
+                beta = b
+        RMSE += (y - np.dot(beta, x)) ** 2
+
+    print(np.sqrt((RMSE)/len(X_test)))
 
     #beta,_,_,_  = np.linalg.lstsq(X_train,Y_train)
-    print(RSME)
-    #print(np.sqrt(np.mean((np.dot(X_test, beta) - Y_test) ** 2)))
