@@ -2,13 +2,7 @@ import numpy as np
 import sys, csv, math
 from functools import reduce
 if __name__ == '__main__':
-    file = sys.argv[1]
-
-    with open(file, 'r') as csvfile:
-        reader = csv.reader(csvfile, delimiter=',')
-        data = np.array( [ [float(r) for r in row] for row in reader])
-        print(data.shape)
-        data = data[:-1]
+    data = np.genfromtxt('SpamDataPruned.csv', delimiter=",")
     np.random.seed(0)
     np.random.shuffle(data)
     train_num = int(data.shape[0] * 0.9)
