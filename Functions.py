@@ -13,7 +13,7 @@ def confusionMatrix(actual,pred):
 
     # write confusion matrix to file
     numpy.savetxt("matrix.csv",con,delimiter=',')
-    return con
+    #return con
 
 
 def kNN(k, training_set, test_set,training_label, test_label):
